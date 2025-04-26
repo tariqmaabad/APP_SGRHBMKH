@@ -1,0 +1,86 @@
+/* Dashboard styles */
+.card {
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Statistics Cards */
+.card h2 {
+    font-size: 2rem;
+    font-weight: 700;
+}
+
+.card-title {
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.card-body i {
+    opacity: 0.8;
+}
+
+/* List groups */
+.list-group-item {
+    border: none;
+    padding: 0.8rem 1.25rem;
+    margin-bottom: 0.5rem;
+    background-color: #f8f9fa;
+    border-radius: 8px !important;
+    transition: background-color 0.2s;
+}
+
+.list-group-item:hover {
+    background-color: #f0f0f0;
+}
+
+.list-group-item:last-child {
+    margin-bottom: 0;
+}
+
+/* Badges */
+.badge {
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+}
+
+/* Section headers */
+.card-header {
+    background-color: #fff;
+    border-bottom: 2px solid #f0f0f0;
+    padding: 1.25rem;
+}
+
+.card-header h5 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+/* Sub-headers */
+h6 {
+    color: #495057;
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+/* Notes and small text */
+.text-muted.small {
+    font-size: 0.8rem;
+    font-style: italic;
+}
+
+/* Main header */
+h2.mb-4 {
+    font-weight: 700;
+    font-size: 1.8rem;
+    letter-spacing: -0.5px;
+}
