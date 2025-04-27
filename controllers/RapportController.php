@@ -80,6 +80,9 @@ class RapportController extends Controller {
         $date_debut = $_GET['date_debut'] ?? null;
         $date_fin = $_GET['date_fin'] ?? null;
 
+        // Add debug logging
+        error_log("Filters applied: type=$type_mouvement, debut=$date_debut, fin=$date_fin");
+
         $stats = [
             'total' => $this->mouvements->count($type_mouvement, $date_debut, $date_fin),
             'mutations' => $this->mouvements->countByType('MUTATION', $date_debut, $date_fin),
@@ -89,7 +92,11 @@ class RapportController extends Controller {
             'evolution_mensuelle' => $this->mouvements->getEvolutionMensuelle($type_mouvement, $date_debut, $date_fin)
         ];
 
+        // Debug stats
+        error_log("Stats data: " . json_encode($stats));
+
         $mouvements = $this->mouvements->getRecents($type_mouvement, $date_debut, $date_fin);
+        error_log("Found " . count($mouvements) . " movements");
 
         $this->render('rapports/mouvements', compact('stats', 'mouvements'));
     }

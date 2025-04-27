@@ -249,15 +249,30 @@ window.addEventListener('load', function() {
         const typeChart = new Chart(typeCtx, {
     type: 'pie',
     data: {
-        labels: <?= json_encode(array_map(function($item) { return $item['type']; }, $stats['par_type'])) ?>,
+        labels: <?= json_encode(array_map(function($item) { 
+            $types = [
+                'MUTATION' => 'Mutation',
+                'FORMATION' => 'Formation',
+                'MISE_A_DISPOSITION' => 'Mise à disposition',
+                'SUSPENSION' => 'Suspension',
+                'RETRAITE_AGE' => 'Retraite',
+                'DECES' => 'Décès',
+                'DEMISSION' => 'Démission',
+                'MISE_EN_DISPONIBILITE' => 'Mise en disponibilité'
+            ];
+            return $types[$item['type']] ?? str_replace('_', ' ', $item['type']); 
+        }, $stats['par_type'])) ?>,
         datasets: [{
             data: <?= json_encode(array_map(function($item) { return $item['total']; }, $stats['par_type'])) ?>,
             backgroundColor: [
-                'rgba(13, 110, 253, 0.8)',
-                'rgba(25, 135, 84, 0.8)',
-                'rgba(13, 202, 240, 0.8)',
-                'rgba(255, 193, 7, 0.8)',
-                'rgba(220, 53, 69, 0.8)'
+                'rgba(25, 135, 84, 0.8)',    // vert pour mutations
+                'rgba(13, 202, 240, 0.8)',    // bleu pour formations
+                'rgba(13, 110, 253, 0.8)',    // bleu foncé pour mise à dispo
+                'rgba(255, 193, 7, 0.8)',     // jaune pour suspension
+                'rgba(220, 53, 69, 0.8)',     // rouge pour retraite
+                'rgba(108, 117, 125, 0.8)',   // gris pour autres types
+                'rgba(111, 66, 193, 0.8)',    // violet pour autres types
+                'rgba(102, 16, 242, 0.8)'     // violet foncé pour autres types
             ],
             borderWidth: 1
         }]

@@ -319,18 +319,14 @@ class MouvementPersonnel extends Model {
         }
     }
 
-    public function getStatsByType($type_mouvement = null, $date_debut = null, $date_fin = null) {
+    public function getStatsByType($date_debut = null, $date_fin = null) {
         try {
-            $sql = "SELECT DATE_FORMAT(date_mouvement, '%Y-%m') as mois,
+            $sql = "SELECT type_mouvement as type,
                     COUNT(*) as total
                     FROM {$this->table} 
                     WHERE deleted_at IS NULL";
             $params = [];
 
-            if ($type_mouvement) {
-                $sql .= " AND type_mouvement = :type";
-                $params[':type'] = $type_mouvement;
-            }
             if ($date_debut) {
                 $sql .= " AND date_mouvement >= :date_debut";
                 $params[':date_debut'] = $date_debut;
@@ -340,8 +336,8 @@ class MouvementPersonnel extends Model {
                 $params[':date_fin'] = $date_fin;
             }
 
-            $sql .= " GROUP BY DATE_FORMAT(date_mouvement, '%Y-%m')
-                     ORDER BY mois DESC LIMIT 12";
+            $sql .= " GROUP BY type_mouvement
+                     ORDER BY total DESC";
 
             $stmt = $this->db->prepare($sql);
             foreach ($params as $key => $value) {
@@ -355,7 +351,7 @@ class MouvementPersonnel extends Model {
         }
     }
 
-    public function getRecents($limit = 50) {
+    public function getRecents($type_mouvement = null, $date_debut = null, $date_fin = null, $limit = 50) {
         try {
             $sql = "SELECT m.*, p.nom, p.prenom,
                     fo.nom_formation as origine,
@@ -364,11 +360,29 @@ class MouvementPersonnel extends Model {
                     JOIN personnel p ON m.personnel_id = p.id
                     LEFT JOIN formations_sanitaires fo ON m.formation_sanitaire_origine_id = fo.id
                     LEFT JOIN formations_sanitaires fd ON m.formation_sanitaire_destination_id = fd.id
-                    WHERE m.deleted_at IS NULL
-                    ORDER BY m.date_mouvement DESC
-                    LIMIT :limit";
+                    WHERE m.deleted_at IS NULL";
+
+            $params = [];
+            
+            if ($type_mouvement) {
+                $sql .= " AND m.type_mouvement = :type_mouvement";
+                $params[':type_mouvement'] = $type_mouvement;
+            }
+            if ($date_debut) {
+                $sql .= " AND m.date_mouvement >= :date_debut";
+                $params[':date_debut'] = $date_debut;
+            }
+            if ($date_fin) {
+                $sql .= " AND m.date_mouvement <= :date_fin";
+                $params[':date_fin'] = $date_fin;
+            }
+
+            $sql .= " ORDER BY m.date_mouvement DESC LIMIT :limit";
 
             $stmt = $this->db->prepare($sql);
+            foreach ($params as $key => $value) {
+                $stmt->bindValue($key, $value);
+            }
             $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
             $stmt->execute();
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
