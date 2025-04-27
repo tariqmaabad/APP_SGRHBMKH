@@ -223,15 +223,22 @@ class Personnel extends Model {
                 LEFT JOIN formations_sanitaires fs ON p.formation_sanitaire_id = fs.id
                 LEFT JOIN provinces pr ON fs.province_id = pr.id
                 WHERE p.deleted_at IS NULL 
-                AND (p.ppr LIKE :term 
-                     OR p.nom LIKE :term 
-                     OR p.prenom LIKE :term
-                     OR p.cin LIKE :term)";
+                AND (p.ppr LIKE :ppr 
+                     OR p.nom LIKE :nom 
+                     OR p.prenom LIKE :prenom
+                     OR p.cin LIKE :cin
+                     OR CONCAT(p.nom, ' ', p.prenom) LIKE :full_name
+                     OR CONCAT(p.prenom, ' ', p.nom) LIKE :reverse_name)";
 
             error_log("Search SQL: " . $sql);
             $stmt = $this->db->prepare($sql);
             $searchTerm = "%" . trim($term) . "%";
-            $stmt->bindValue(":term", $searchTerm);
+            $stmt->bindValue(":ppr", $searchTerm);
+            $stmt->bindValue(":nom", $searchTerm);
+            $stmt->bindValue(":prenom", $searchTerm);
+            $stmt->bindValue(":cin", $searchTerm);
+            $stmt->bindValue(":full_name", $searchTerm);
+            $stmt->bindValue(":reverse_name", $searchTerm);
             
             error_log("Executing search with term: " . $searchTerm);
             $stmt->execute();
