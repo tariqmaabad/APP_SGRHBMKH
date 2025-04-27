@@ -368,6 +368,39 @@ try {
             }
             break;
 
+        case 'export':
+            $controller = new ExportController();
+            if (!isset($urlParts[1])) {
+                notFound();
+            } else {
+                switch ($urlParts[1]) {
+                    case 'staff':
+                        if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['format'])) {
+                            $controller->exportStaffList();
+                        } else {
+                            $controller->staff();
+                        }
+                        break;
+                    case 'movements':
+                        if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['format'])) {
+                            $controller->exportMovementList();
+                        } else {
+                            $controller->movements();
+                        }
+                        break;
+                    case 'establishments':
+                        if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['format'])) {
+                            $controller->exportEstablishmentsList();
+                        } else {
+                            $controller->establishments();
+                        }
+                        break;
+                    default:
+                        notFound();
+                }
+            }
+            break;
+
         case 'api':
             if (!isset($urlParts[1])) notFound();
             switch ($urlParts[1]) {

@@ -1,15 +1,77 @@
 # Système de Gestion des Ressources Humaines (SGRH-BMKH)
 
-Application de gestion des ressources humaines avec architecture MVC en PHP.
+## Description du Projet
 
-## Fonctionnalités
+Le SGRH-BMKH est une solution complète de gestion des ressources humaines spécialement conçue pour le secteur de la santé. Cette application web moderne utilise une architecture MVC en PHP pour offrir une plateforme robuste et évolutive de gestion du personnel médical et administratif.
 
-- Gestion des données du personnel (informations personnelles, postes)
-- Suivi des mouvements du personnel en temps réel
-- Gestion des workflows RH (intégration, départ, mobilité)
-- Tableau de bord interactif avec statistiques
-- Gestion des formations sanitaires et provinces
-- Système d'authentification et de contrôle d'accès
+### Objectifs Principaux
+
+- Centraliser et digitaliser la gestion des ressources humaines
+- Optimiser le suivi du personnel médical et administratif
+- Faciliter la prise de décision grâce à des tableaux de bord analytiques
+- Améliorer l'efficacité des processus RH
+- Assurer une meilleure répartition des ressources humaines
+
+### Public Cible
+
+- Gestionnaires RH du secteur santé
+- Directeurs d'établissements de santé
+- Administrateurs du système de santé
+- Responsables des formations sanitaires
+- Personnel des ressources humaines
+
+## Caractéristiques Techniques
+
+- **Architecture** : MVC (Modèle-Vue-Contrôleur)
+- **Backend** : PHP 7.4+
+- **Base de données** : MySQL 5.7+
+- **Frontend** : HTML5, CSS3, JavaScript
+- **Bibliothèques** : 
+  - JSCharting pour les visualisations de données
+  - Bootstrap pour l'interface responsive
+  - Font Awesome pour les icônes
+  - jQuery pour les interactions dynamiques
+
+## Fonctionnalités Détaillées
+
+### 1. Gestion du Personnel
+- Dossiers complets des employés
+  - Informations personnelles et professionnelles
+  - Historique des affectations
+  - Qualifications et certifications
+  - Documents administratifs
+- Gestion des contrats et statuts
+- Suivi des congés et absences
+- Évaluation des performances
+
+### 2. Gestion des Établissements
+- Cartographie des formations sanitaires
+- Classification par type (urbain/rural)
+- Capacité et spécialités
+- Besoins en personnel
+- Taux d'occupation des postes
+
+### 3. Mouvements du Personnel
+- Suivi en temps réel des affectations
+- Gestion des mutations et détachements
+- Historique des mouvements
+- Planification des rotations
+- Rapports de mobilité
+
+### 4. Tableau de Bord Analytique
+- Statistiques détaillées du personnel
+- Répartition par genre et situation familiale
+- Analyse des tendances RH
+- Indicateurs de performance
+- Rapports personnalisables
+- Visualisations interactives avec JSCharting
+
+### 5. Administration et Sécurité
+- Gestion des utilisateurs et rôles
+- Journalisation des actions
+- Protection des données sensibles
+- Sauvegarde automatique
+- Authentification sécurisée
 
 ## Prérequis
 
@@ -68,7 +130,6 @@ APP_SGRHBMKH/
 │   ├── js/           # Scripts JavaScript
 │   └── img/          # Images
 └── utils/             # Utilitaires et helpers
-
 ```
 
 ## Architecture MVC
@@ -119,12 +180,12 @@ Mot de passe : password
 
 Ce projet est sous licence MIT. Voir le fichier `LICENSE` pour plus de détails.
 
-## Support
+## Support et Contact
 
-Pour toute question ou problème :
-- Ouvrir une issue sur GitHub
-- Contacter l'administrateur système
+Pour toute question ou assistance :
+- Documentation : Consulter le wiki du projet
+- Bugs : Ouvrir une issue sur GitHub
+- Support technique : Contacter l'équipe de maintenance
+- Questions générales : Contacter l'administrateur système
 
-
-
-## t
+Pour plus d'informations, visitez notre page de documentation ou rejoignez notre communauté de développeurs.

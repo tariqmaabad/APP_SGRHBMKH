@@ -154,6 +154,19 @@
                            href="/APP_SGRHBMKH/rapports/etablissements">
                             <i class="fas fa-hospital-alt"></i> Établissements
                         </a>
+                        <div class="nav-group-title mt-2">Exports</div>
+                        <a class="nav-link <?= strpos($_SERVER['REQUEST_URI'], '/export/staff') !== false ? 'active' : '' ?>" 
+                           href="/APP_SGRHBMKH/export/staff">
+                            <i class="fas fa-file-export"></i> Liste du Personnel
+                        </a>
+                        <a class="nav-link <?= strpos($_SERVER['REQUEST_URI'], '/export/movements') !== false ? 'active' : '' ?>" 
+                           href="/APP_SGRHBMKH/export/movements">
+                            <i class="fas fa-file-export"></i> Liste des Mouvements
+                        </a>
+                        <a class="nav-link <?= strpos($_SERVER['REQUEST_URI'], '/export/establishments') !== false ? 'active' : '' ?>" 
+                           href="/APP_SGRHBMKH/export/establishments">
+                            <i class="fas fa-file-export"></i> Liste des Établissements
+                        </a>
                     </li>
 
                     <?php if (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin'): ?>

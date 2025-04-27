@@ -102,7 +102,7 @@
                     </h5>
                 </div>
                 <div class="card-body">
-                    <canvas id="genderChart"></canvas>
+                    <div id="genderChart" style="width: 100%; height: 300px;"></div>
                 </div>
             </div>
         </div>
@@ -116,12 +116,13 @@
                     </h5>
                 </div>
                 <div class="card-body">
-                    <canvas id="maritalChart"></canvas>
+                    <div id="maritalChart" style="width: 100%; height: 300px;"></div>
                 </div>
             </div>
         </div>
     </div>
-<!-- Chart.js -->
+<!-- JSCharting -->
+<script src="https://code.jscharting.com/latest/jscharting.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
 const colors = {
@@ -135,48 +136,65 @@ const colors = {
     warning: '#ffc107'
 };
 
-// Gender Distribution Chart
-new Chart(document.getElementById('genderChart'), {
-    type: 'doughnut',
-    data: {
-        labels: ['Hommes', 'Femmes'],
-        datasets: [{
-            data: [
-                <?= $stats['effectif_masculin'] ?? 0 ?>,
-                <?= $stats['effectif_feminin'] ?? 0 ?>
-            ],
-            backgroundColor: [colors.primary, colors.info]
-        }]
-    },
-    options: {
-        responsive: true,
-        plugins: {
-            legend: { position: 'right' }
+// Gender Distribution Chart using JSCharting
+JSC.Chart('genderChart', {
+    type: 'pie',
+    title_label_text: 'Répartition par Genre',
+    legend_template: '%icon %name',
+    defaultPoint_label_text: '<b>%name</b>: %value',
+    series: [
+        {
+            points: [
+                {
+                    name: 'Hommes',
+                    y: <?= $stats['effectif_masculin'] ?? 0 ?>,
+                    color: '#0d6efd'
+                },
+                {
+                    name: 'Femmes',
+                    y: <?= $stats['effectif_feminin'] ?? 0 ?>,
+                    color: '#0dcaf0'
+                }
+            ]
         }
-    }
+    ],
+    palette: ['#0d6efd', '#0dcaf0'],
+    animation_enabled: true
 });
 
-// Marital Status Chart
-new Chart(document.getElementById('maritalChart'), {
-    type: 'doughnut',
-    data: {
-        labels: ['Célibataires', 'Marié(e)s', 'Divorcé(e)s', 'Veuf(ve)s'],
-        datasets: [{
-            data: [
-                <?= $stats['effectif_celibataire'] ?? 0 ?>,
-                <?= $stats['effectif_marie'] ?? 0 ?>,
-                <?= $stats['effectif_divorce'] ?? 0 ?>,
-                <?= $stats['effectif_veuf'] ?? 0 ?>
-            ],
-            backgroundColor: [colors.primary, colors.success, colors.warning, colors.purple]
-        }]
-    },
-    options: {
-        responsive: true,
-        plugins: {
-            legend: { position: 'right' }
+// Marital Status Chart using JSCharting
+JSC.Chart('maritalChart', {
+    type: 'pie',
+    title_label_text: 'Situation Familiale',
+    legend_template: '%icon %name',
+    defaultPoint_label_text: '<b>%name</b>: %value',
+    series: [
+        {
+            points: [
+                {
+                    name: 'Célibataires',
+                    y: <?= $stats['effectif_celibataire'] ?? 0 ?>,
+                    color: '#0d6efd'
+                },
+                {
+                    name: 'Marié(e)s',
+                    y: <?= $stats['effectif_marie'] ?? 0 ?>,
+                    color: '#198754'
+                },
+                {
+                    name: 'Divorcé(e)s',
+                    y: <?= $stats['effectif_divorce'] ?? 0 ?>,
+                    color: '#ffc107'
+                },
+                {
+                    name: 'Veuf(ve)s',
+                    y: <?= $stats['effectif_veuf'] ?? 0 ?>,
+                    color: '#800080'
+                }
+            ]
         }
-    }
+    ],
+    animation_enabled: true
 });
 
 // Human Resources Chart

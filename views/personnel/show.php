@@ -11,6 +11,14 @@
             </nav>
         </div>
         <div>
+            <div class="btn-group me-2" role="group">
+                <a href="/APP_SGRHBMKH/export/staff?id=<?php echo $personnel['id']; ?>&format=excel" class="btn btn-success">
+                    <i class="fas fa-file-excel me-2"></i>Excel
+                </a>
+                <a href="/APP_SGRHBMKH/export/staff?id=<?php echo $personnel['id']; ?>&format=pdf" class="btn btn-danger">
+                    <i class="fas fa-file-pdf me-2"></i>PDF
+                </a>
+            </div>
             <a href="/APP_SGRHBMKH/personnel/edit/<?php echo $personnel['id']; ?>" class="btn btn-warning me-2">
                 <i class="fas fa-edit me-2"></i>Modifier
             </a>
