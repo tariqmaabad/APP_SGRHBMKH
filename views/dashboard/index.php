@@ -153,7 +153,7 @@ JSC.Chart('genderChart', {
                 {
                     name: 'Femmes',
                     y: <?= $stats['effectif_feminin'] ?? 0 ?>,
-                    color: '#0dcaf0'
+                    color: '#9f0ec2'
                 }
             ]
         }
