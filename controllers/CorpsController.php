@@ -13,6 +13,7 @@ class CorpsController extends Controller {
     }
 
     public function index() {
+        $this->requireAuth();
         $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
         $perPage = 10;
         $type = $_GET['type'] ?? null;
@@ -37,6 +38,9 @@ class CorpsController extends Controller {
                 'stats' => $stats,
                 'types' => $types,
                 'current_type' => $type,
+                'canCreate' => $this->canCreate(),
+                'canEdit' => $this->canEdit(),
+                'canDelete' => $this->canDelete(),
                 'pagination' => [
                     'current_page' => $page,
                     'per_page' => $perPage,
@@ -56,6 +60,7 @@ class CorpsController extends Controller {
     }
 
     public function create() {
+        $this->enforceCreatePermission();
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $this->validateCSRF();
             $data = [
@@ -94,6 +99,7 @@ class CorpsController extends Controller {
     }
 
     public function edit($id) {
+        $this->enforceEditPermission();
         $corps = $this->corpsModel->findById($id);
         
         if (!$corps) {
@@ -140,6 +146,7 @@ class CorpsController extends Controller {
     }
 
     public function delete($id) {
+        $this->enforceDeletePermission();
         $corps = $this->corpsModel->findById($id);
         
         if (!$corps) {
@@ -178,7 +185,10 @@ class CorpsController extends Controller {
         $this->render('corps/view', [
             'corps' => $corps,
             'grades' => $grades,
-            'types' => $types
+            'types' => $types,
+            'canEdit' => $this->canEdit(),
+            'canDelete' => $this->canDelete(),
+            'canCreate' => $this->canCreate()
         ]);
     }
 }

@@ -1,9 +1,11 @@
 <div class="container-fluid">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1>Grades</h1>
-        <a href="/APP_SGRHBMKH/grades/create" class="btn btn-primary">
-            <i class="fas fa-plus"></i> Nouveau Grade
-        </a>
+        <?php if ($canCreate): ?>
+            <a href="/APP_SGRHBMKH/grades/create" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Nouveau Grade
+            </a>
+        <?php endif; ?>
     </div>
 
     <?php if (empty($grades)): ?>
@@ -43,13 +45,17 @@
                                     <td><?= date('d/m/Y H:i', strtotime($grade['created_at'])) ?></td>
                                     <td>
                                         <div class="btn-group" role="group">
-                                            <a href="/APP_SGRHBMKH/grades/edit/<?= $grade['id'] ?>" class="btn btn-sm btn-warning">
-                                                <i class="fas fa-edit"></i> Modifier
-                                            </a>
-                                            <button type="button" class="btn btn-sm btn-danger" 
-                                                    onclick="confirmDelete(<?= $grade['id'] ?>, '<?= addslashes($grade['nom_grade']) ?>')">
-                                                <i class="fas fa-trash"></i> Supprimer
-                                            </button>
+                                            <?php if ($canEdit): ?>
+                                                <a href="/APP_SGRHBMKH/grades/edit/<?= $grade['id'] ?>" class="btn btn-sm btn-warning">
+                                                    <i class="fas fa-edit"></i> Modifier
+                                                </a>
+                                            <?php endif; ?>
+                                            <?php if ($canDelete): ?>
+                                                <button type="button" class="btn btn-sm btn-danger" 
+                                                        onclick="confirmDelete(<?= $grade['id'] ?>, '<?= addslashes($grade['nom_grade']) ?>')">
+                                                    <i class="fas fa-trash"></i> Supprimer
+                                                </button>
+                                            <?php endif; ?>
                                         </div>
                                     </td>
                                 </tr>

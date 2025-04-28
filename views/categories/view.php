@@ -2,9 +2,11 @@
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1><?= htmlspecialchars($categorie['nom_categorie']) ?></h1>
         <div>
-            <a href="/APP_SGRHBMKH/formations/create?categorie_id=<?= $categorie['id'] ?>" class="btn btn-success">
-                <i class="fas fa-plus"></i> Ajouter une Formation
-            </a>
+            <?php if ($canCreate): ?>
+                <a href="/APP_SGRHBMKH/formations/create?categorie_id=<?= $categorie['id'] ?>" class="btn btn-success">
+                    <i class="fas fa-plus"></i> Ajouter une Formation
+                </a>
+            <?php endif; ?>
             <a href="/APP_SGRHBMKH/categories" class="btn btn-secondary">
                 <i class="fas fa-arrow-left"></i> Retour à la liste
             </a>
@@ -37,10 +39,12 @@
                 </div>
                 <div class="card-footer">
                     <div class="d-flex justify-content-between">
-                        <a href="/APP_SGRHBMKH/categories/edit/<?= $categorie['id'] ?>" class="btn btn-warning">
-                            <i class="fas fa-edit"></i> Modifier
-                        </a>
-                        <?php if (empty($formations)): ?>
+                        <?php if ($canEdit): ?>
+                            <a href="/APP_SGRHBMKH/categories/edit/<?= $categorie['id'] ?>" class="btn btn-warning">
+                                <i class="fas fa-edit"></i> Modifier
+                            </a>
+                        <?php endif; ?>
+                        <?php if ($canDelete && empty($formations)): ?>
                             <button type="button" class="btn btn-danger" 
                                     onclick="confirmDelete(<?= $categorie['id'] ?>, '<?= addslashes($categorie['nom_categorie']) ?>')">
                                 <i class="fas fa-trash"></i> Supprimer
@@ -84,12 +88,14 @@
                                             <td><?= htmlspecialchars($formation['milieu']) ?></td>
                                             <td>
                                                 <div class="btn-group" role="group">
-                                                    <a href="/APP_SGRHBMKH/formations/edit/<?= $formation['id'] ?>" class="btn btn-sm btn-warning">
-                                                        <i class="fas fa-edit"></i> Modifier
-                                                    </a>
                                                     <a href="/APP_SGRHBMKH/formations/show/<?= $formation['id'] ?>" class="btn btn-sm btn-info">
                                                         <i class="fas fa-eye"></i> Voir
                                                     </a>
+                                                    <?php if ($canEdit): ?>
+                                                        <a href="/APP_SGRHBMKH/formations/edit/<?= $formation['id'] ?>" class="btn btn-sm btn-warning">
+                                                            <i class="fas fa-edit"></i> Modifier
+                                                        </a>
+                                                    <?php endif; ?>
                                                 </div>
                                             </td>
                                         </tr>

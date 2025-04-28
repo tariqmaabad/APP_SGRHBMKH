@@ -10,9 +10,11 @@
 
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2>Liste du Personnel</h2>
-        <a href="/APP_SGRHBMKH/personnel/create" class="btn btn-primary">
-            <i class="fas fa-plus me-2"></i>Nouveau Personnel
-        </a>
+        <?php if ($canCreate): ?>
+            <a href="/APP_SGRHBMKH/personnel/create" class="btn btn-primary">
+                <i class="fas fa-plus me-2"></i>Nouveau Personnel
+            </a>
+        <?php endif; ?>
     </div>
 
     <div class="card mb-4">
@@ -132,19 +134,23 @@
                                                title="Détails">
                                                 <i class="fas fa-eye"></i>
                                             </a>
-                                            <a href="/APP_SGRHBMKH/personnel/edit/<?php echo $p['id']; ?>" 
-                                               class="btn btn-sm btn-warning" 
-                                               data-bs-toggle="tooltip" 
-                                               title="Modifier">
-                                                <i class="fas fa-edit"></i>
-                                            </a>
-                                            <button type="button" 
-                                                    class="btn btn-sm btn-danger" 
-                                                    data-bs-toggle="modal" 
-                                                    data-bs-target="#deleteModal<?php echo $p['id']; ?>"
-                                                    title="Supprimer">
-                                                <i class="fas fa-trash"></i>
-                                            </button>
+                                            <?php if ($canEdit): ?>
+                                                <a href="/APP_SGRHBMKH/personnel/edit/<?php echo $p['id']; ?>" 
+                                                   class="btn btn-sm btn-warning" 
+                                                   data-bs-toggle="tooltip" 
+                                                   title="Modifier">
+                                                    <i class="fas fa-edit"></i>
+                                                </a>
+                                            <?php endif; ?>
+                                            <?php if ($canDelete): ?>
+                                                <button type="button" 
+                                                        class="btn btn-sm btn-danger" 
+                                                        data-bs-toggle="modal" 
+                                                        data-bs-target="#deleteModal<?php echo $p['id']; ?>"
+                                                        title="Supprimer">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            <?php endif; ?>
                                         </div>
 
                                         <!-- Modal de confirmation de suppression -->

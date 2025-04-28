@@ -13,6 +13,7 @@ class GradeController extends Controller {
     }
 
     public function index() {
+        $this->requireAuth();
         $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
         $perPage = 10;
         $corps_id = isset($_GET['corps_id']) ? (int)$_GET['corps_id'] : null;
@@ -30,6 +31,9 @@ class GradeController extends Controller {
                 'corps' => $corps,
                 'stats' => $stats,
                 'current_corps' => $corps_id,
+                'canCreate' => $this->canCreate(),
+                'canEdit' => $this->canEdit(),
+                'canDelete' => $this->canDelete(),
                 'pagination' => [
                     'current_page' => $page,
                     'per_page' => $perPage,
@@ -49,6 +53,7 @@ class GradeController extends Controller {
     }
 
     public function create() {
+        $this->enforceCreatePermission();
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $this->validateCSRF();
             
@@ -86,6 +91,7 @@ class GradeController extends Controller {
     }
 
     public function edit($id) {
+        $this->enforceEditPermission();
         $grade = $this->gradeModel->findById($id);
         
         if (!$grade) {
@@ -131,6 +137,7 @@ class GradeController extends Controller {
     }
 
     public function delete($id) {
+        $this->enforceDeletePermission();
         $this->validateCSRF();
         $grade = $this->gradeModel->findById($id);
         

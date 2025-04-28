@@ -2,9 +2,11 @@
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1><?= htmlspecialchars($corps['nom_corps']) ?></h1>
         <div>
-            <a href="/APP_SGRHBMKH/grades/create?corps_id=<?= $corps['id'] ?>" class="btn btn-success">
-                <i class="fas fa-plus"></i> Ajouter un Grade
-            </a>
+            <?php if ($canCreate): ?>
+                <a href="/APP_SGRHBMKH/grades/create?corps_id=<?= $corps['id'] ?>" class="btn btn-success">
+                    <i class="fas fa-plus"></i> Ajouter un Grade
+                </a>
+            <?php endif; ?>
             <a href="/APP_SGRHBMKH/corps" class="btn btn-secondary">
                 <i class="fas fa-arrow-left"></i> Retour à la liste
             </a>
@@ -52,10 +54,12 @@
                 </div>
                 <div class="card-footer">
                     <div class="d-flex justify-content-between">
-                        <a href="/APP_SGRHBMKH/corps/edit/<?= $corps['id'] ?>" class="btn btn-warning">
-                            <i class="fas fa-edit"></i> Modifier
-                        </a>
-                        <?php if (empty($grades)): ?>
+                        <?php if ($canEdit): ?>
+                            <a href="/APP_SGRHBMKH/corps/edit/<?= $corps['id'] ?>" class="btn btn-warning">
+                                <i class="fas fa-edit"></i> Modifier
+                            </a>
+                        <?php endif; ?>
+                        <?php if ($canDelete && empty($grades)): ?>
                             <button type="button" class="btn btn-danger" 
                                     onclick="confirmDelete(<?= $corps['id'] ?>, '<?= addslashes($corps['nom_corps']) ?>')"
                                     aria-label="Supprimer <?= htmlspecialchars($corps['nom_corps']) ?>">
@@ -103,17 +107,21 @@
                                             <td><?= date('d/m/Y', strtotime($grade['created_at'])) ?></td>
                                             <td>
                                                 <div class="btn-group" role="group" aria-label="Actions pour le grade">
-                                                    <a href="/APP_SGRHBMKH/grades/edit/<?= $grade['id'] ?>" 
-                                                       class="btn btn-sm btn-warning"
-                                                       aria-label="Modifier <?= htmlspecialchars($grade['nom_grade']) ?>">
-                                                        <i class="fas fa-edit"></i> Modifier
-                                                    </a>
-                                                    <button type="button" 
-                                                            class="btn btn-sm btn-danger" 
-                                                            onclick="confirmDeleteGrade(<?= $grade['id'] ?>, '<?= addslashes($grade['nom_grade']) ?>')"
-                                                            aria-label="Supprimer <?= htmlspecialchars($grade['nom_grade']) ?>">
-                                                        <i class="fas fa-trash"></i> Supprimer
-                                                    </button>
+                                                    <?php if ($canEdit): ?>
+                                                        <a href="/APP_SGRHBMKH/grades/edit/<?= $grade['id'] ?>" 
+                                                           class="btn btn-sm btn-warning"
+                                                           aria-label="Modifier <?= htmlspecialchars($grade['nom_grade']) ?>">
+                                                            <i class="fas fa-edit"></i> Modifier
+                                                        </a>
+                                                    <?php endif; ?>
+                                                    <?php if ($canDelete): ?>
+                                                        <button type="button" 
+                                                                class="btn btn-sm btn-danger" 
+                                                                onclick="confirmDeleteGrade(<?= $grade['id'] ?>, '<?= addslashes($grade['nom_grade']) ?>')"
+                                                                aria-label="Supprimer <?= htmlspecialchars($grade['nom_grade']) ?>">
+                                                            <i class="fas fa-trash"></i> Supprimer
+                                                        </button>
+                                                    <?php endif; ?>
                                                 </div>
                                             </td>
                                         </tr>

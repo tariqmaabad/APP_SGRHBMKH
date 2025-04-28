@@ -19,7 +19,10 @@ class ProvinceController extends Controller {
         $provinces = $this->provinceModel->findAllSorted();
         $this->render('provinces/index', [
             'provinces' => $provinces,
-            'messages' => $this->getFlashMessages()
+            'messages' => $this->getFlashMessages(),
+            'canCreate' => $this->canCreate(),
+            'canEdit' => $this->canEdit(),
+            'canDelete' => $this->canDelete()
         ]);
     }
 
@@ -34,12 +37,14 @@ class ProvinceController extends Controller {
 
         $this->render('provinces/show', [
             'province' => $province,
-            'messages' => $this->getFlashMessages()
+            'messages' => $this->getFlashMessages(),
+            'canEdit' => $this->canEdit(),
+            'canDelete' => $this->canDelete()
         ]);
     }
 
     public function create() {
-        $this->requireAuth();
+        $this->enforceCreatePermission();
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $this->validateCSRF();
@@ -73,7 +78,7 @@ class ProvinceController extends Controller {
     }
 
     public function edit($id) {
-        $this->requireAuth();
+        $this->enforceEditPermission();
 
         $province = $this->provinceModel->findDetailById($id);
         if (!$province) {
@@ -114,7 +119,7 @@ class ProvinceController extends Controller {
     }
 
     public function delete($id) {
-        $this->requireAuth();
+        $this->enforceDeletePermission();
         $this->validateCSRF();
 
         $province = $this->provinceModel->findDetailById($id);

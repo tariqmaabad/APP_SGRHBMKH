@@ -1,9 +1,11 @@
 <div class="container-fluid">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1>Catégories d'Établissement</h1>
-        <a href="/APP_SGRHBMKH/categories/create" class="btn btn-primary">
-            <i class="fas fa-plus"></i> Nouvelle Catégorie
-        </a>
+        <?php if ($canCreate): ?>
+            <a href="/APP_SGRHBMKH/categories/create" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Nouvelle Catégorie
+            </a>
+        <?php endif; ?>
     </div>
 
     <?php if (empty($categories)): ?>
@@ -42,13 +44,17 @@
                                             <a href="/APP_SGRHBMKH/categories/show/<?= $categorie['id'] ?>" class="btn btn-sm btn-info">
                                                 <i class="fas fa-eye"></i> Voir
                                             </a>
-                                            <a href="/APP_SGRHBMKH/categories/edit/<?= $categorie['id'] ?>" class="btn btn-sm btn-warning">
-                                                <i class="fas fa-edit"></i> Modifier
-                                            </a>
-                                            <button type="button" class="btn btn-sm btn-danger" 
-                                                    onclick="confirmDelete(<?= $categorie['id'] ?>, '<?= addslashes($categorie['nom_categorie']) ?>', <?= $categorie['nombre_formations'] ?>)">
-                                                <i class="fas fa-trash"></i> Supprimer
-                                            </button>
+                                            <?php if ($canEdit): ?>
+                                                <a href="/APP_SGRHBMKH/categories/edit/<?= $categorie['id'] ?>" class="btn btn-sm btn-warning">
+                                                    <i class="fas fa-edit"></i> Modifier
+                                                </a>
+                                            <?php endif; ?>
+                                            <?php if ($canDelete): ?>
+                                                <button type="button" class="btn btn-sm btn-danger" 
+                                                        onclick="confirmDelete(<?= $categorie['id'] ?>, '<?= addslashes($categorie['nom_categorie']) ?>', <?= $categorie['nombre_formations'] ?>)">
+                                                    <i class="fas fa-trash"></i> Supprimer
+                                                </button>
+                                            <?php endif; ?>
                                         </div>
                                     </td>
                                 </tr>

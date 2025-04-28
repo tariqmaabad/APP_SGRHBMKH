@@ -1,9 +1,11 @@
 <div class="container-fluid">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1>Corps</h1>
-        <a href="/APP_SGRHBMKH/corps/create" class="btn btn-primary">
-            <i class="fas fa-plus"></i> Nouveau Corps
-        </a>
+        <?php if ($canCreate): ?>
+            <a href="/APP_SGRHBMKH/corps/create" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Nouveau Corps
+            </a>
+        <?php endif; ?>
     </div>
 
     <!-- Statistiques par type -->
@@ -119,12 +121,14 @@
                                                aria-label="Voir les détails de <?= htmlspecialchars($c['nom_corps']) ?>">
                                                 <i class="fas fa-eye"></i> Voir
                                             </a>
-                                            <a href="/APP_SGRHBMKH/corps/edit/<?= $c['id'] ?>" 
-                                               class="btn btn-sm btn-warning"
-                                               aria-label="Modifier <?= htmlspecialchars($c['nom_corps']) ?>">
-                                                <i class="fas fa-edit"></i> Modifier
-                                            </a>
-                                            <?php if ($c['nombre_grades'] == 0): ?>
+                                            <?php if ($canEdit): ?>
+                                                <a href="/APP_SGRHBMKH/corps/edit/<?= $c['id'] ?>" 
+                                                   class="btn btn-sm btn-warning"
+                                                   aria-label="Modifier <?= htmlspecialchars($c['nom_corps']) ?>">
+                                                    <i class="fas fa-edit"></i> Modifier
+                                                </a>
+                                            <?php endif; ?>
+                                            <?php if ($canDelete && $c['nombre_grades'] == 0): ?>
                                                 <button type="button" 
                                                         class="btn btn-sm btn-danger" 
                                                         onclick="confirmDelete(<?= $c['id'] ?>, '<?= addslashes($c['nom_corps']) ?>')"

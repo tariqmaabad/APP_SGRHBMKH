@@ -1,9 +1,11 @@
 <div class="container-fluid">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1>Formations Sanitaires</h1>
-        <a href="/APP_SGRHBMKH/formations/create" class="btn btn-primary">
-            <i class="fas fa-plus"></i> Nouvelle Formation
-        </a>
+        <?php if ($canCreate): ?>
+            <a href="/APP_SGRHBMKH/formations/create" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Nouvelle Formation
+            </a>
+        <?php endif; ?>
     </div>
 
     <div class="card mb-4">
@@ -82,13 +84,17 @@
                                             <a href="/APP_SGRHBMKH/formations/show/<?= $formation['id'] ?>" class="btn btn-sm btn-info">
                                                 <i class="fas fa-eye"></i> Voir
                                             </a>
-                                            <a href="/APP_SGRHBMKH/formations/edit/<?= $formation['id'] ?>" class="btn btn-sm btn-warning">
-                                                <i class="fas fa-edit"></i> Modifier
-                                            </a>
-                                            <button type="button" class="btn btn-sm btn-danger" 
-                                                    onclick="confirmDelete(<?= $formation['id'] ?>, '<?= addslashes($formation['nom_formation']) ?>', <?= $formation['nombre_personnel'] ?>)">
-                                                <i class="fas fa-trash"></i> Supprimer
-                                            </button>
+                                            <?php if ($canEdit): ?>
+                                                <a href="/APP_SGRHBMKH/formations/edit/<?= $formation['id'] ?>" class="btn btn-sm btn-warning">
+                                                    <i class="fas fa-edit"></i> Modifier
+                                                </a>
+                                            <?php endif; ?>
+                                            <?php if ($canDelete): ?>
+                                                <button type="button" class="btn btn-sm btn-danger" 
+                                                        onclick="confirmDelete(<?= $formation['id'] ?>, '<?= addslashes($formation['nom_formation']) ?>', <?= $formation['nombre_personnel'] ?>)">
+                                                    <i class="fas fa-trash"></i> Supprimer
+                                                </button>
+                                            <?php endif; ?>
                                         </div>
                                     </td>
                                 </tr>
@@ -156,6 +162,9 @@ document.getElementById('categorie_filter').addEventListener('change', function(
                 return;
             }
 
+            const canEdit = <?= json_encode($canEdit) ?>;
+            const canDelete = <?= json_encode($canDelete) ?>;
+
             const rows = formations.map(formation => `
                 <tr>
                     <td>${formation.id}</td>
@@ -178,13 +187,17 @@ document.getElementById('categorie_filter').addEventListener('change', function(
                             <a href="/APP_SGRHBMKH/formations/show/${formation.id}" class="btn btn-sm btn-info">
                                 <i class="fas fa-eye"></i> Voir
                             </a>
-                            <a href="/APP_SGRHBMKH/formations/edit/${formation.id}" class="btn btn-sm btn-warning">
-                                <i class="fas fa-edit"></i> Modifier
-                            </a>
-                            <button type="button" class="btn btn-sm btn-danger" 
-                                    onclick="confirmDelete(${formation.id}, '${escapeHtml(formation.nom_formation)}', ${formation.nombre_personnel || 0})">
-                                <i class="fas fa-trash"></i> Supprimer
-                            </button>
+                            ${canEdit ? `
+                                <a href="/APP_SGRHBMKH/formations/edit/${formation.id}" class="btn btn-sm btn-warning">
+                                    <i class="fas fa-edit"></i> Modifier
+                                </a>
+                            ` : ''}
+                            ${canDelete ? `
+                                <button type="button" class="btn btn-sm btn-danger" 
+                                        onclick="confirmDelete(${formation.id}, '${escapeHtml(formation.nom_formation)}', ${formation.nombre_personnel || 0})">
+                                    <i class="fas fa-trash"></i> Supprimer
+                                </button>
+                            ` : ''}
                         </div>
                     </td>
                 </tr>

@@ -20,11 +20,15 @@ class FormationSanitaireController extends Controller {
         $categories = $this->categorieModel->findAllSorted();
         $this->render('formations/index', [
             'formations' => $formations,
-            'categories' => $categories
+            'categories' => $categories,
+            'canCreate' => $this->canCreate(),
+            'canEdit' => $this->canEdit(),
+            'canDelete' => $this->canDelete()
         ]);
     }
 
     public function create() {
+        $this->enforceCreatePermission();
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $data = [
                 'nom_formation' => trim($_POST['nom_formation']),
@@ -65,6 +69,8 @@ class FormationSanitaireController extends Controller {
     }
 
     public function edit($id) {
+        $this->enforceEditPermission();
+        
         $formation = $this->formationModel->findById($id);
         
         if (!$formation) {
@@ -113,6 +119,7 @@ class FormationSanitaireController extends Controller {
     }
 
     public function delete($id) {
+        $this->enforceDeletePermission();
         $this->validateCSRF();
         $formation = $this->formationModel->findById($id);
         
@@ -144,7 +151,9 @@ class FormationSanitaireController extends Controller {
         $this->render('formations/view', [
             'formation' => $formation,
             'stats' => $stats,
-            'personnel' => $personnel
+            'personnel' => $personnel,
+            'canEdit' => $this->canEdit(),
+            'canDelete' => $this->canDelete()
         ]);
     }
 

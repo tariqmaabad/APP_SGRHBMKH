@@ -2,9 +2,11 @@
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1><?= htmlspecialchars($formation['nom_formation']) ?></h1>
         <div>
-            <a href="/APP_SGRHBMKH/personnel/create?formation_id=<?= $formation['id'] ?>" class="btn btn-success">
-                <i class="fas fa-plus"></i> Ajouter du Personnel
-            </a>
+            <?php if ($canCreate): ?>
+                <a href="/APP_SGRHBMKH/personnel/create?formation_id=<?= $formation['id'] ?>" class="btn btn-success">
+                    <i class="fas fa-plus"></i> Ajouter du Personnel
+                </a>
+            <?php endif; ?>
             <a href="/APP_SGRHBMKH/formations" class="btn btn-secondary">
                 <i class="fas fa-arrow-left"></i> Retour à la liste
             </a>
@@ -58,10 +60,12 @@
                 </div>
                 <div class="card-footer">
                     <div class="d-flex justify-content-between">
-                        <a href="/APP_SGRHBMKH/formations/edit/<?= $formation['id'] ?>" class="btn btn-warning">
-                            <i class="fas fa-edit"></i> Modifier
-                        </a>
-                        <?php if (empty($stats['nombre_personnel'])): ?>
+                        <?php if ($canEdit): ?>
+                            <a href="/APP_SGRHBMKH/formations/edit/<?= $formation['id'] ?>" class="btn btn-warning">
+                                <i class="fas fa-edit"></i> Modifier
+                            </a>
+                        <?php endif; ?>
+                        <?php if ($canDelete && empty($stats['nombre_personnel'])): ?>
                             <button type="button" class="btn btn-danger" 
                                     onclick="confirmDelete(<?= $formation['id'] ?>, '<?= addslashes($formation['nom_formation']) ?>')">
                                 <i class="fas fa-trash"></i> Supprimer
@@ -126,12 +130,16 @@
                                     <td><?= htmlspecialchars($person['nom_corps'] ?? '-') ?></td>
                                     <td><?= htmlspecialchars($person['nom_specialite'] ?? '-') ?></td>
                                     <td>
-                                        <a href="/APP_SGRHBMKH/personnel/edit/<?= $person['id'] ?>" class="btn btn-sm btn-warning">
-                                            <i class="fas fa-edit"></i>
-                                        </a>
-                                        <a href="/APP_SGRHBMKH/mouvements/create?personnel_id=<?= $person['id'] ?>" class="btn btn-sm btn-info">
-                                            <i class="fas fa-exchange-alt"></i>
-                                        </a>
+                                        <?php if ($canEdit): ?>
+                                            <a href="/APP_SGRHBMKH/personnel/edit/<?= $person['id'] ?>" class="btn btn-sm btn-warning">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                        <?php endif; ?>
+                                        <?php if ($canCreate): ?>
+                                            <a href="/APP_SGRHBMKH/mouvements/create?personnel_id=<?= $person['id'] ?>" class="btn btn-sm btn-info">
+                                                <i class="fas fa-exchange-alt"></i>
+                                            </a>
+                                        <?php endif; ?>
                                     </td>
                                 </tr>
                                 <?php endforeach; ?>

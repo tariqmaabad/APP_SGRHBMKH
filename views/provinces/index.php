@@ -1,9 +1,11 @@
 <div class="container-fluid">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1>Provinces</h1>
-        <a href="/APP_SGRHBMKH/provinces/create" class="btn btn-primary">
-            <i class="fas fa-plus"></i> Nouvelle Province
-        </a>
+        <?php if ($canCreate): ?>
+            <a href="/APP_SGRHBMKH/provinces/create" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Nouvelle Province
+            </a>
+        <?php endif; ?>
     </div>
 
     <?php if (empty($provinces)): ?>
@@ -36,13 +38,17 @@
                                     <td>
                                         <div class="btn-group" role="group">
                                          
-                                            <a href="/APP_SGRHBMKH/provinces/edit/<?= $province['id'] ?>" class="btn btn-sm btn-warning">
-                                                <i class="fas fa-edit"></i> Modifier
-                                            </a>
-                                            <button type="button" class="btn btn-sm btn-danger" 
-                                                    onclick="confirmDelete(<?= $province['id'] ?>, '<?= addslashes($province['nom_province']) ?>', <?= $province['nombre_formations'] ?? 0 ?>)">
-                                                <i class="fas fa-trash"></i> Supprimer
-                                            </button>
+                                            <?php if ($canEdit): ?>
+                                                <a href="/APP_SGRHBMKH/provinces/edit/<?= $province['id'] ?>" class="btn btn-sm btn-warning">
+                                                    <i class="fas fa-edit"></i> Modifier
+                                                </a>
+                                            <?php endif; ?>
+                                            <?php if ($canDelete): ?>
+                                                <button type="button" class="btn btn-sm btn-danger" 
+                                                        onclick="confirmDelete(<?= $province['id'] ?>, '<?= addslashes($province['nom_province']) ?>', <?= $province['nombre_formations'] ?? 0 ?>)">
+                                                    <i class="fas fa-trash"></i> Supprimer
+                                                </button>
+                                            <?php endif; ?>
                                         </div>
                                     </td>
                                 </tr>

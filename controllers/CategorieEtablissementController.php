@@ -14,10 +14,17 @@ class CategorieEtablissementController extends Controller {
 
     public function index() {
         $categories = $this->categorieModel->findWithStats();
-        $this->render('categories/index', ['categories' => $categories]);
+        $this->render('categories/index', [
+            'categories' => $categories,
+            'canCreate' => $this->canCreate(),
+            'canEdit' => $this->canEdit(),
+            'canDelete' => $this->canDelete()
+        ]);
     }
 
     public function create() {
+        $this->enforceCreatePermission();
+        
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $this->validateCSRF();
             
@@ -47,6 +54,8 @@ class CategorieEtablissementController extends Controller {
     }
 
     public function edit($id) {
+        $this->enforceEditPermission();
+        
         $categorie = $this->categorieModel->findById($id);
         
         if (!$categorie) {
@@ -84,6 +93,8 @@ class CategorieEtablissementController extends Controller {
     }
 
     public function delete($id) {
+        $this->enforceDeletePermission();
+        
         $categorie = $this->categorieModel->findById($id);
         
         if (!$categorie) {
@@ -120,7 +131,9 @@ class CategorieEtablissementController extends Controller {
         
         $this->render('categories/view', [
             'categorie' => $categorie,
-            'formations' => $formations
+            'formations' => $formations,
+            'canEdit' => $this->canEdit(),
+            'canDelete' => $this->canDelete()
         ]);
     }
 }

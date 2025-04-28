@@ -19,9 +19,11 @@
                     <i class="fas fa-file-pdf me-2"></i>PDF
                 </a>
             </div>
-            <a href="/APP_SGRHBMKH/personnel/edit/<?php echo $personnel['id']; ?>" class="btn btn-warning me-2">
-                <i class="fas fa-edit me-2"></i>Modifier
-            </a>
+            <?php if ($canEdit): ?>
+                <a href="/APP_SGRHBMKH/personnel/edit/<?php echo $personnel['id']; ?>" class="btn btn-warning me-2">
+                    <i class="fas fa-edit me-2"></i>Modifier
+                </a>
+            <?php endif; ?>
             <a href="/APP_SGRHBMKH/personnel" class="btn btn-secondary">
                 <i class="fas fa-arrow-left me-2"></i>Retour à la liste
             </a>
@@ -151,9 +153,11 @@
             <div class="card border-0 shadow-sm">
                 <div class="card-header bg-transparent d-flex justify-content-between align-items-center">
                     <h5 class="card-title mb-0"><i class="fas fa-exchange-alt me-2"></i>Historique des Mouvements</h5>
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#mouvementModal">
-                        <i class="fas fa-plus me-2"></i>Nouveau Mouvement
-                    </button>
+                    <?php if ($canCreate): ?>
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#mouvementModal">
+                            <i class="fas fa-plus me-2"></i>Nouveau Mouvement
+                        </button>
+                    <?php endif; ?>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">

@@ -15,6 +15,11 @@ class PersonnelController extends Controller {
     public function index() {
         $this->requireAuth();
         
+        // Add permission flags for view
+        $canCreate = $this->canCreate();
+        $canEdit = $this->canEdit();
+        $canDelete = $this->canDelete();
+        
         $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
         $perPage = 10;
         $searchTerm = isset($_GET['search']) ? trim($_GET['search']) : '';
@@ -106,7 +111,10 @@ class PersonnelController extends Controller {
                 'formations_list' => $formations_list,
                 'sort' => $sort,
                 'order' => $order,
-                'messages' => $this->getFlashMessages()
+                'messages' => $this->getFlashMessages(),
+                'canCreate' => $canCreate,
+                'canEdit' => $canEdit,
+                'canDelete' => $canDelete
             ]);
             
         } catch (Exception $e) {
@@ -125,7 +133,7 @@ class PersonnelController extends Controller {
 
     // Afficher le formulaire de création
     public function create() {
-        $this->requireAuth();
+        $this->enforceCreatePermission();
         
         // Get required data for dropdown lists
         require_once __DIR__ . '/../models/Corps.php';
@@ -223,7 +231,7 @@ class PersonnelController extends Controller {
 
     // Afficher le formulaire de modification
     public function edit($id) {
-        $this->requireAuth();
+        $this->enforceEditPermission();
 
         $personnel = $this->personnelModel->findByIdWithDetails($id);
         if (!$personnel) {
@@ -343,13 +351,15 @@ class PersonnelController extends Controller {
             'mouvements' => $mouvements,
             'formations_sanitaires' => $formations_sanitaires,
             'csrf_token' => $this->generateCSRFToken(),
-            'messages' => $this->getFlashMessages()
+            'messages' => $this->getFlashMessages(),
+            'canEdit' => $this->canEdit(),
+            'canCreate' => $this->canCreate()
         ]);
     }
 
     // Supprimer un personnel
     public function delete($id) {
-        $this->requireAuth();
+        $this->enforceDeletePermission();
         $this->validateCSRF();
 
         if ($this->personnelModel->delete($id)) {

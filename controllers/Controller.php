@@ -153,6 +153,39 @@ abstract class Controller {
         }
     }
 
+    protected function canEdit() {
+        return isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin';
+    }
+
+    protected function canCreate() {
+        return isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin';
+    }
+
+    protected function canDelete() {
+        return isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin';
+    }
+
+    protected function enforceEditPermission() {
+        if (!$this->canEdit()) {
+            $this->setFlashMessage('error', 'Vous n\'avez pas les droits nécessaires pour modifier le contenu');
+            $this->redirect('/dashboard');
+        }
+    }
+
+    protected function enforceCreatePermission() {
+        if (!$this->canCreate()) {
+            $this->setFlashMessage('error', 'Vous n\'avez pas les droits nécessaires pour créer du contenu');
+            $this->redirect('/dashboard');
+        }
+    }
+
+    protected function enforceDeletePermission() {
+        if (!$this->canDelete()) {
+            $this->setFlashMessage('error', 'Vous n\'avez pas les droits nécessaires pour supprimer le contenu');
+            $this->redirect('/dashboard');
+        }
+    }
+
     protected function getPagination($total, $perPage, $currentPage) {
         $totalPages = ceil($total / $perPage);
         $currentPage = max(1, min($currentPage, $totalPages));
