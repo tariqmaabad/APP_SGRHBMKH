@@ -112,11 +112,12 @@ class AuthController extends Controller {
                     $this->setFlashMessage('success', 'Connexion réussie');
                     $this->redirect('/APP_SGRHBMKH/dashboard');
                 } else {
-                    $this->setFlashMessage('error', 'Email ou mot de passe incorrect');
+                    $errors['auth'] = 'Email ou mot de passe incorrect';
                 }
             }
 
             $this->render('auth/login', [
+                'messages' => $this->getFlashMessages(),
                 'errors' => $errors,
                 'email' => $email,
                 'csrf_token' => $this->generateCSRFToken()

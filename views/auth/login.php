@@ -95,6 +95,12 @@
                         <?php endif; ?>
                     </div>
 
+                    <?php if (isset($errors['auth'])): ?>
+                        <div class="alert alert-danger mb-3">
+                            <?php echo $errors['auth']; ?>
+                        </div>
+                    <?php endif; ?>
+
                     <div class="d-grid gap-2">
                         <button type="submit" class="btn btn-primary">
                             <i class="fas fa-sign-in-alt me-2"></i>Se connecter
