@@ -2,9 +2,11 @@
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1>Détails du Mouvement</h1>
         <div>
-            <button type="button" class="btn btn-danger" onclick="confirmDelete(<?= $mouvement['id'] ?>, '<?= addslashes($types[$mouvement['type_mouvement']] ?? $mouvement['type_mouvement']) ?>')">
-                <i class="fas fa-trash"></i> Supprimer
-            </button>
+            <?php if ($canDelete): ?>
+                <button type="button" class="btn btn-danger" onclick="confirmDelete(<?= $mouvement['id'] ?>, '<?= addslashes($types[$mouvement['type_mouvement']] ?? $mouvement['type_mouvement']) ?>')">
+                    <i class="fas fa-trash"></i> Supprimer
+                </button>
+            <?php endif; ?>
             <a href="/APP_SGRHBMKH/mouvements" class="btn btn-secondary">
                 <i class="fas fa-arrow-left"></i> Retour à la liste
             </a>

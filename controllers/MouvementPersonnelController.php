@@ -86,6 +86,9 @@ class MouvementPersonnelController extends Controller {
                 'mouvements' => $mouvements,
                 'types' => $types,
                 'stats' => $stats,
+                'canCreate' => $this->canCreate(),
+                'canEdit' => $this->canEdit(),
+                'canDelete' => $this->canDelete(),
                 'pagination' => [
                     'current_page' => $page,
                     'per_page' => $perPage,
@@ -110,7 +113,7 @@ class MouvementPersonnelController extends Controller {
     }
 
     public function create() {
-        $this->requireAuth();
+        $this->enforceCreatePermission();
         
         error_log("MouvementPersonnelController::create() called with method: " . $_SERVER['REQUEST_METHOD']);
         
@@ -208,7 +211,9 @@ class MouvementPersonnelController extends Controller {
         
         $this->render('mouvements/view', [
             'mouvement' => $mouvement,
-            'types' => $types
+            'types' => $types,
+            'canEdit' => $this->canEdit(),
+            'canDelete' => $this->canDelete()
         ]);
     }
 
@@ -225,7 +230,10 @@ class MouvementPersonnelController extends Controller {
         $this->render('mouvements/by_type', [
             'mouvements' => $mouvements,
             'type_actuel' => $type,
-            'types' => $types
+            'types' => $types,
+            'canCreate' => $this->canCreate(),
+            'canEdit' => $this->canEdit(),
+            'canDelete' => $this->canDelete()
         ]);
     }
 
@@ -240,6 +248,7 @@ class MouvementPersonnelController extends Controller {
     }
 
     public function delete($id) {
+        $this->enforceDeletePermission();
         $mouvement = $this->MouvementPersonnel->findById($id);
         
         if (!$mouvement) {

@@ -92,10 +92,12 @@
                                             <a href="/mouvements/view/<?= $mouvement['id'] ?>" class="btn btn-sm btn-info">
                                                 <i class="fas fa-eye"></i> Voir
                                             </a>
-                                            <button type="button" class="btn btn-sm btn-danger" 
-                                                    onclick="confirmDelete(<?= $mouvement['id'] ?>, '<?= addslashes($types[$type_actuel]) ?>')">
-                                                <i class="fas fa-trash"></i> Supprimer
-                                            </button>
+                                            <?php if ($canDelete): ?>
+                                                <button type="button" class="btn btn-sm btn-danger" 
+                                                        onclick="confirmDelete(<?= $mouvement['id'] ?>, '<?= addslashes($types[$type_actuel]) ?>')">
+                                                    <i class="fas fa-trash"></i> Supprimer
+                                                </button>
+                                            <?php endif; ?>
                                         </div>
                                     </td>
                                 </tr>

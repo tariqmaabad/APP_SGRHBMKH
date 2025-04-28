@@ -5,9 +5,11 @@
             <a href="/APP_SGRHBMKH/mouvements/stats" class="btn btn-info">
                 <i class="fas fa-chart-bar me-1"></i> Statistiques
             </a>
-            <a href="/APP_SGRHBMKH/mouvements/create" class="btn btn-primary">
-                <i class="fas fa-plus me-1"></i> Nouveau Mouvement
-            </a>
+            <?php if ($canCreate): ?>
+                <a href="/APP_SGRHBMKH/mouvements/create" class="btn btn-primary">
+                    <i class="fas fa-plus me-1"></i> Nouveau Mouvement
+                </a>
+            <?php endif; ?>
         </div>
     </div>
 
@@ -150,10 +152,12 @@
                                             <a href="/APP_SGRHBMKH/mouvements/show/<?= $mouvement['id'] ?>" class="btn btn-sm btn-info">
                                                 <i class="fas fa-eye"></i> Voir
                                             </a>
-                                            <button type="button" class="btn btn-sm btn-danger" 
-                                                    onclick="confirmDelete(<?= $mouvement['id'] ?>, '<?= addslashes($types[$mouvement['type_mouvement']] ?? $mouvement['type_mouvement']) ?>')">
-                                                <i class="fas fa-trash"></i> Supprimer
-                                            </button>
+                                            <?php if ($canDelete): ?>
+                                                <button type="button" class="btn btn-sm btn-danger" 
+                                                        onclick="confirmDelete(<?= $mouvement['id'] ?>, '<?= addslashes($types[$mouvement['type_mouvement']] ?? $mouvement['type_mouvement']) ?>')">
+                                                    <i class="fas fa-trash"></i> Supprimer
+                                                </button>
+                                            <?php endif; ?>
                                         </div>
                                     </td>
                                 </tr>
