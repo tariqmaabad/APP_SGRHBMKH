@@ -18,3 +18,9 @@ php_value session.gc_maxlifetime 3600
 php_value session.cookie_lifetime 3600
 php_flag session.cookie_httponly On
 php_value session.cookie_path "/APP_SGRHBMKH"
+
+# PDF Content Type and Headers
+AddType application/pdf .pdf
+<FilesMatch "\.(pdf)$">
+    Header set Content-Disposition attachment
+</FilesMatch>

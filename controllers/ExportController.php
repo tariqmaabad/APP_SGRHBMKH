@@ -314,8 +314,19 @@ class ExportController extends Controller {
     }
 
     private function exportToPDF($data, $filename, $title, $headers, $isDetailedView = false) {
+        // End any previous output buffering
+        while (ob_get_level()) {
+            ob_end_clean();
+        }
+        
+        // Set headers for PDF display
+        header('Content-Type: application/pdf');
+        header('Content-Disposition: inline; filename="' . $filename . '.pdf"');
+        header('Cache-Control: private, max-age=0, must-revalidate');
+        header('Pragma: public');
+        
         require_once __DIR__ . '/../config/tcpdf_config.php';
-        require_once __DIR__ . '/../vendor/tcpdf/tcpdf.php';
+        require_once __DIR__ . '/../vendor/tecnickcom/tcpdf/tcpdf.php';
         
         // Set page orientation
         $orientation = $isDetailedView ? 'P' : 'L';  // Portrait for detailed view, Landscape for lists
@@ -341,14 +352,14 @@ class ExportController extends Controller {
             $person = $data[0];
             
             // Title
-            $pdf->SetFont('helvetica', 'B', 16);
+            $pdf->SetFont('dejavusans', 'B', 16);
             $pdf->Cell(0, 10, 'Fiche du Personnel', 0, 1, 'C');
             $pdf->Ln(5);
 
             // Personal Information Section
-            $pdf->SetFont('helvetica', 'B', 14);
+            $pdf->SetFont('dejavusans', 'B', 14);
             $pdf->Cell(0, 10, 'Informations Personnelles', 0, 1, 'L');
-            $pdf->SetFont('helvetica', '', 11);
+            $pdf->SetFont('dejavusans', '', 11);
             
             $html = '<table border="1" cellpadding="5">';
             foreach ($headers as $key => $label) {
@@ -363,9 +374,9 @@ class ExportController extends Controller {
             // Movements Section
             if (isset($person['mouvements']) && !empty($person['mouvements'])) {
                 $pdf->AddPage();
-                $pdf->SetFont('helvetica', 'B', 14);
+                $pdf->SetFont('dejavusans', 'B', 14);
                 $pdf->Cell(0, 10, 'Historique des Mouvements', 0, 1, 'L');
-                $pdf->SetFont('helvetica', '', 11);
+                $pdf->SetFont('dejavusans', '', 11);
                 
                 $html = '<table border="1" cellpadding="5">
                     <tr style="background-color: #f5f5f5;">
@@ -390,11 +401,11 @@ class ExportController extends Controller {
             }
         } else {
             // Regular list view
-            $pdf->SetFont('helvetica', 'B', 16);
+            $pdf->SetFont('dejavusans', 'B', 16);
             $pdf->Cell(0, 10, $title, 0, 1, 'C');
             $pdf->Ln(5);
             
-            $pdf->SetFont('helvetica', '', 11);
+            $pdf->SetFont('dejavusans', '', 11);
             $html = '<table border="1" cellpadding="5">';
             $html .= '<tr style="background-color: #f5f5f5;"><th>' . implode('</th><th>', $headers) . '</th></tr>';
             
@@ -440,7 +451,7 @@ class ExportController extends Controller {
         }
         
         // Close and output PDF document
-        $pdf->Output($filename . '.pdf', 'D');
+        $pdf->Output($filename . '.pdf', 'I');
         exit;
     }
 }
