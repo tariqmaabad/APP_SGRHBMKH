@@ -314,144 +314,156 @@ class ExportController extends Controller {
     }
 
     private function exportToPDF($data, $filename, $title, $headers, $isDetailedView = false) {
-        // End any previous output buffering
-        while (ob_get_level()) {
-            ob_end_clean();
-        }
-        
-        // Set headers for PDF display
-        header('Content-Type: application/pdf');
-        header('Content-Disposition: inline; filename="' . $filename . '.pdf"');
-        header('Cache-Control: private, max-age=0, must-revalidate');
-        header('Pragma: public');
-        
-        require_once __DIR__ . '/../config/tcpdf_config.php';
-        require_once __DIR__ . '/../vendor/tecnickcom/tcpdf/tcpdf.php';
-        
-        // Set page orientation
-        $orientation = $isDetailedView ? 'P' : 'L';  // Portrait for detailed view, Landscape for lists
-        $pdf = new TCPDF($orientation, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
-        
-        // Set document information
-        $pdf->SetCreator(PDF_CREATOR);
-        $pdf->SetAuthor(PDF_AUTHOR);
-        $pdf->SetTitle($title);
-        
-        // Remove default header/footer
-        $pdf->setPrintHeader(false);
-        $pdf->setPrintFooter(true);
-        
-        // Set margins
-        $pdf->SetMargins(15, 15, 15);
-        $pdf->SetAutoPageBreak(TRUE, 15);
-        
-        // Add a page
-        $pdf->AddPage();
+        try {
+            // Clear output buffer
+            while (ob_get_level()) {
+                ob_end_clean();
+            }
 
-        if ($isDetailedView) {
-            $person = $data[0];
-            
-            // Title
+            // Set headers for PDF display
+            header('Content-Type: application/pdf');
+            header('Content-Disposition: inline; filename="' . $filename . '.pdf"');
+            header('Cache-Control: private, max-age=0, must-revalidate');
+            header('Pragma: public');
+
+            // Initialize PDF
+            require_once __DIR__ . '/../config/tcpdf_config.php';
+            require_once __DIR__ . '/../vendor/tecnickcom/tcpdf/tcpdf.php';
+
+            // Set page orientation
+            $orientation = $isDetailedView ? 'P' : 'L';  // Portrait for detailed view, Landscape for lists
+            $pdf = new TCPDF($orientation, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+
+            // Configure document
+            $pdf->SetCreator(PDF_CREATOR);
+            $pdf->SetAuthor(PDF_AUTHOR);
+            $pdf->SetTitle($title);
+
+            // Configure page settings
+            $pdf->setPrintHeader(false);
+            $pdf->setPrintFooter(true);
+            $pdf->setFooterFont(Array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
+            $pdf->setFooterMargin(PDF_MARGIN_FOOTER);
+            $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
+            $pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
+            $pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
+            $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
+
+            // Set default font
+            $pdf->SetFont('dejavusans', '', 10);
+
+            // Add first page
+            $pdf->AddPage();
+
+            // Set title style
             $pdf->SetFont('dejavusans', 'B', 16);
-            $pdf->Cell(0, 10, 'Fiche du Personnel', 0, 1, 'C');
+            $pdf->Cell(0, 10, $title, 0, 1, 'C');
             $pdf->Ln(5);
 
-            // Personal Information Section
+            if ($isDetailedView) {
+                $this->generateDetailedPDF($pdf, $data[0], $headers);
+            } else {
+                $this->generateListPDF($pdf, $data, $headers);
+            }
+
+            // Close and output PDF document
+            $pdf->Output($filename . '.pdf', 'I');
+        } catch (Exception $e) {
+            error_log("PDF Generation Error: " . $e->getMessage());
+            echo "Error generating PDF: " . $e->getMessage();
+        }
+        exit;
+    }
+
+    private function generateDetailedPDF($pdf, $person, $headers) {
+        // Personal Information Section
+        $pdf->SetFont('dejavusans', 'B', 14);
+        $pdf->Cell(0, 10, 'Informations Personnelles', 0, 1, 'L');
+        $pdf->SetFont('dejavusans', '', 11);
+        
+        $html = '<table border="1" cellpadding="5">';
+        foreach ($headers as $key => $label) {
+            $html .= '<tr>
+                <th width="30%" style="background-color: #f5f5f5;"><b>' . $label . '</b></th>
+                <td width="70%">' . htmlspecialchars($person[$key] ?? '-') . '</td>
+            </tr>';
+        }
+        $html .= '</table>';
+        $pdf->writeHTML($html, true, false, true, false, '');
+        
+        // Movements Section
+        if (isset($person['mouvements']) && !empty($person['mouvements'])) {
+            $pdf->AddPage();
             $pdf->SetFont('dejavusans', 'B', 14);
-            $pdf->Cell(0, 10, 'Informations Personnelles', 0, 1, 'L');
+            $pdf->Cell(0, 10, 'Historique des Mouvements', 0, 1, 'L');
             $pdf->SetFont('dejavusans', '', 11);
             
-            $html = '<table border="1" cellpadding="5">';
-            foreach ($headers as $key => $label) {
+            $html = '<table border="1" cellpadding="5">
+                <tr style="background-color: #f5f5f5;">
+                    <th width="20%"><b>Date</b></th>
+                    <th width="15%"><b>Type</b></th>
+                    <th width="25%"><b>Origine</b></th>
+                    <th width="25%"><b>Destination</b></th>
+                    <th width="15%"><b>Commentaire</b></th>
+                </tr>';
+                
+            foreach ($person['mouvements'] as $mouvement) {
                 $html .= '<tr>
-                    <th width="30%" style="background-color: #f5f5f5;"><b>' . $label . '</b></th>
-                    <td width="70%">' . htmlspecialchars($person[$key] ?? '-') . '</td>
+                    <td>' . htmlspecialchars($mouvement['date_mouvement']) . '</td>
+                    <td>' . htmlspecialchars($mouvement['type_mouvement']) . '</td>
+                    <td>' . htmlspecialchars($mouvement['origine_nom'] ?? $mouvement['origine'] ?? '-') . '</td>
+                    <td>' . htmlspecialchars($mouvement['destination_nom'] ?? $mouvement['destination'] ?? '-') . '</td>
+                    <td style="font-size: 9pt;">' . htmlspecialchars($mouvement['commentaire'] ?? '-') . '</td>
                 </tr>';
             }
             $html .= '</table>';
             $pdf->writeHTML($html, true, false, true, false, '');
-            
-            // Movements Section
-            if (isset($person['mouvements']) && !empty($person['mouvements'])) {
-                $pdf->AddPage();
-                $pdf->SetFont('dejavusans', 'B', 14);
-                $pdf->Cell(0, 10, 'Historique des Mouvements', 0, 1, 'L');
-                $pdf->SetFont('dejavusans', '', 11);
-                
-                $html = '<table border="1" cellpadding="5">
-                    <tr style="background-color: #f5f5f5;">
-                        <th width="20%"><b>Date</b></th>
-                        <th width="15%"><b>Type</b></th>
-                        <th width="25%"><b>Origine</b></th>
-                        <th width="25%"><b>Destination</b></th>
-                        <th width="15%"><b>Commentaire</b></th>
-                    </tr>';
-                    
-                foreach ($person['mouvements'] as $mouvement) {
-                    $html .= '<tr>
-                        <td>' . htmlspecialchars($mouvement['date_mouvement']) . '</td>
-                        <td>' . htmlspecialchars($mouvement['type_mouvement']) . '</td>
-                        <td>' . htmlspecialchars($mouvement['origine_nom'] ?? $mouvement['origine'] ?? '-') . '</td>
-                        <td>' . htmlspecialchars($mouvement['destination_nom'] ?? $mouvement['destination'] ?? '-') . '</td>
-                        <td style="font-size: 9pt;">' . htmlspecialchars($mouvement['commentaire'] ?? '-') . '</td>
-                    </tr>';
-                }
-                $html .= '</table>';
-                $pdf->writeHTML($html, true, false, true, false, '');
-            }
-        } else {
-            // Regular list view
-            $pdf->SetFont('dejavusans', 'B', 16);
-            $pdf->Cell(0, 10, $title, 0, 1, 'C');
-            $pdf->Ln(5);
-            
-            $pdf->SetFont('dejavusans', '', 11);
-            $html = '<table border="1" cellpadding="5">';
-            $html .= '<tr style="background-color: #f5f5f5;"><th>' . implode('</th><th>', $headers) . '</th></tr>';
-            
-            foreach ($data as $row) {
-                $html .= '<tr>';
-                if ($headers && is_array($headers)) {
-                    foreach ($headers as $key => $label) {
-                        $value = is_array($row) && isset($row[$key]) ? $row[$key] : '';
-                        
-                        // Format dates
-                        if (in_array($key, ['date_naissance', 'date_recrutement', 'date_prise_service']) && !empty($value)) {
-                            $value = date('d/m/Y', strtotime($value));
-                        }
-                        
-                        // Format gender
-                        if ($key === 'sexe') {
-                            $value = $value === 'M' ? 'Masculin' : 'Féminin';
-                        }
-                        
-                        // Format situation familiale
-                        if ($key === 'situation_familiale') {
-                            $situations = [
-                                'CELIBATAIRE' => 'Célibataire',
-                                'MARIE' => 'Marié(e)',
-                                'DIVORCE' => 'Divorcé(e)',
-                                'VEUF' => 'Veuf/Veuve'
-                            ];
-                            $value = $situations[$value] ?? $value;
-                        }
-                        
-                        $html .= '<td>' . htmlspecialchars($value) . '</td>';
-                    }
-                } else {
-                    foreach ($row as $value) {
-                        $html .= '<td>' . htmlspecialchars($value) . '</td>';
-                    }
-                }
-                $html .= '</tr>';
-            }
-            $html .= '</table>';
-            
-            $pdf->writeHTML($html, true, false, true, false, '');
         }
+    }
+
+    private function generateListPDF($pdf, $data, $headers) {
+        $pdf->SetFont('dejavusans', '', 11);
+        $html = '<table border="1" cellpadding="5">';
+        $html .= '<tr style="background-color: #f5f5f5;"><th>' . implode('</th><th>', $headers) . '</th></tr>';
         
-        // Close and output PDF document
-        $pdf->Output($filename . '.pdf', 'I');
-        exit;
+        foreach ($data as $row) {
+            $html .= '<tr>';
+            if (is_array($headers)) {
+                foreach ($headers as $key => $label) {
+                    $value = is_array($row) && isset($row[$key]) ? $row[$key] : '';
+                    
+                    // Format dates
+                    if (in_array($key, ['date_naissance', 'date_recrutement', 'date_prise_service']) && !empty($value)) {
+                        $value = date('d/m/Y', strtotime($value));
+                    }
+                    
+                    // Format gender
+                    if ($key === 'sexe') {
+                        $value = $value === 'M' ? 'Masculin' : 'Féminin';
+                    }
+                    
+                    // Format situation familiale
+                    if ($key === 'situation_familiale') {
+                        $situations = [
+                            'CELIBATAIRE' => 'Célibataire',
+                            'MARIE' => 'Marié(e)',
+                            'DIVORCE' => 'Divorcé(e)',
+                            'VEUF' => 'Veuf/Veuve'
+                        ];
+                        $value = $situations[$value] ?? $value;
+                    }
+                    
+                    $html .= '<td>' . htmlspecialchars($value) . '</td>';
+                }
+            } else {
+                foreach ($row as $value) {
+                    $html .= '<td>' . htmlspecialchars($value) . '</td>';
+                }
+            }
+            $html .= '</tr>';
+        }
+        $html .= '</table>';
+        
+        $pdf->writeHTML($html, true, false, true, false, '');
     }
 }
