@@ -1,6 +1,6 @@
 <div class="container-fluid">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1>Formations Sanitaires</h1>
+        <h1><i class="fas fa-hospital me-2"></i>Formations Sanitaires</h1>
         <?php if ($canCreate): ?>
             <a href="/APP_SGRHBMKH/formations/create" class="btn btn-primary">
                 <i class="fas fa-plus"></i> Nouvelle Formation

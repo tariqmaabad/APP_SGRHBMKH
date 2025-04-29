@@ -7,7 +7,7 @@
         <div class="col-12">
             <div class="d-flex align-items-center">
                 <div>
-                    <h2 class="mb-0">Rapport des Effectifs</h2>
+                    <h2 class="mb-0"><i class="fas fa-users-cog me-2"></i>Rapport des Effectifs</h2>
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item"><a href="#">Rapports</a></li>

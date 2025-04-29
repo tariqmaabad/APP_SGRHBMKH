@@ -1,6 +1,6 @@
 <div class="container-fluid">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1>Mouvements du Personnel</h1>
+        <h1><i class="fas fa-exchange-alt me-2"></i>Mouvements du Personnel</h1>
         <div class="btn-group">
             <a href="/APP_SGRHBMKH/mouvements/stats" class="btn btn-info">
                 <i class="fas fa-chart-bar me-1"></i> Statistiques

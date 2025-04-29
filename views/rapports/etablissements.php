@@ -1,5 +1,5 @@
 <div class="container-fluid">
-    <h2 class="mb-4">Rapport des Établissements</h2>
+    <h2 class="mb-4"><i class="fas fa-file-medical me-2"></i>Rapport des Établissements</h2>
 
     <!-- Filtres -->
     <div class="card mb-4">

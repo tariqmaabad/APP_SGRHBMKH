@@ -1,6 +1,6 @@
 <div class="container-fluid">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1>Provinces</h1>
+        <h1><i class="fas fa-map-marker-alt me-2"></i>Provinces</h1>
         <?php if ($canCreate): ?>
             <a href="/APP_SGRHBMKH/provinces/create" class="btn btn-primary">
                 <i class="fas fa-plus"></i> Nouvelle Province

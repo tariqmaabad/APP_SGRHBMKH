@@ -1,5 +1,5 @@
 <div class="container-fluid">
-    <h2 class="mb-4">Rapport des Mouvements</h2>
+    <h2 class="mb-4"><i class="fas fa-chart-line me-2"></i>Rapport des Mouvements</h2>
 
     <!-- Filtres -->
     <div class="card mb-4">
