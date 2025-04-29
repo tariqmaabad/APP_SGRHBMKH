@@ -139,26 +139,28 @@ class Dashboard extends Model {
         }
 
         try {
-            $sql = "SELECT COUNT(*) as count FROM formations_sanitaires WHERE deleted_at IS NULL AND ";
+            $sql = "SELECT COUNT(*) as count FROM formations_sanitaires fs 
+                    JOIN categories_etablissements ce ON fs.categorie_id = ce.id 
+                    WHERE fs.deleted_at IS NULL AND ";
             
             switch ($type) {
                 case 'CSU':
-                    $sql .= "type_formation = 'CSU' AND milieu = 'URBAIN'";
+                    $sql .= "type_formation = 'CENTRE_SANTE' AND milieu = 'URBAIN'";
                     break;
                 case 'CSR':
-                    $sql .= "type_formation = 'CSR' AND milieu = 'RURAL'";
+                    $sql .= "type_formation = 'CENTRE_SANTE' AND milieu = 'RURAL'";
                     break;
                 case 'HR':
-                    $sql .= "type_formation = 'HOPITAL' AND categorie_id = 2"; // Centre Hospitalier Régional
+                    $sql .= "ce.nom_categorie = 'Hôpital Régional'";
                     break;
                 case 'HP':
-                    $sql .= "type_formation = 'HOPITAL' AND categorie_id = 1"; // Hôpital Provincial
+                    $sql .= "ce.nom_categorie = 'Hôpital Provincial'";
                     break;
                 case 'HL':
-                    $sql .= "type_formation = 'HOPITAL' AND categorie_id = 3"; // Centre de Santé Urbain (assuming this is the local hospital category)
+                    $sql .= "ce.nom_categorie = 'Hôpital Local'";
                     break;
                 case 'CO':
-                    $sql .= "type_formation = 'CO'";
+                    $sql .= "ce.nom_categorie = 'Centre d\\'Oncologie'";
                     break;
             }
             

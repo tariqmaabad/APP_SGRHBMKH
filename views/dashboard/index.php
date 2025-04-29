@@ -247,8 +247,12 @@ new Chart(document.getElementById('infrastructureChart'), {
                 <?= $stats['centres_oncologie'] ?? 0 ?>
             ],
             backgroundColor: [
-                colors.teal, colors.teal,
-                colors.navy, colors.navy, colors.navy, colors.navy
+                '#4CAF50', // Centers Urbains - Green
+                '#8BC34A', // Centers Ruraux - Light Green
+                '#2196F3', // Hôpitaux Régionaux - Blue
+                '#3F51B5', // Hôpitaux Provinciaux - Indigo
+                '#673AB7', // Hôpitaux Locaux - Deep Purple
+                '#E91E63'  // Centres Oncologie - Pink
             ]
         }]
     },
