@@ -145,22 +145,22 @@ class Dashboard extends Model {
             
             switch ($type) {
                 case 'CSU':
-                    $sql .= "type_formation = 'CENTRE_SANTE' AND milieu = 'URBAIN'";
+                    $sql .= "type_formation = 'CENTRE_SANTE' AND milieu = 'URBAIN'"; // Centre de Santé Urbain
                     break;
                 case 'CSR':
-                    $sql .= "type_formation = 'CENTRE_SANTE' AND milieu = 'RURAL'";
+                    $sql .= "type_formation = 'CENTRE_SANTE' AND milieu = 'RURAL'"; // Centre de Santé Rural
                     break;
                 case 'HR':
-                    $sql .= "ce.nom_categorie = 'Hôpital Régional'";
+                    $sql .= "type_formation = 'HOPITAL' AND categorie_id = 6"; // Hôpital Régional
                     break;
                 case 'HP':
                     $sql .= "ce.nom_categorie = 'Hôpital Provincial'";
                     break;
                 case 'HL':
-                    $sql .= "ce.nom_categorie = 'Hôpital Local'";
+                    $sql .= "type_formation = 'HOPITAL' AND categorie_id NOT IN (1,6) AND milieu = 'URBAIN'"; // Hôpital Local (excluding regional and provincial)
                     break;
                 case 'CO':
-                    $sql .= "ce.nom_categorie = 'Centre d\\'Oncologie'";
+                    $sql .= "type_formation = 'CENTRE_SANTE' AND nom_formation LIKE '%oncolog%'";
                     break;
             }
             
