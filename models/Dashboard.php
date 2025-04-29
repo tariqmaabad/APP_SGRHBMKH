@@ -139,34 +139,59 @@ class Dashboard extends Model {
         }
 
         try {
+            // First, let's log the table structures
+            error_log("Checking table structures for type: " . $type);
+            
+            // Check formations_sanitaires table
+            $checkFs = "DESCRIBE formations_sanitaires";
+            $stmtFs = $this->db->prepare($checkFs);
+            $stmtFs->execute();
+            error_log("formations_sanitaires columns: " . json_encode($stmtFs->fetchAll(PDO::FETCH_COLUMN)));
+            
+            // Check categories_etablissements table
+            $checkCe = "DESCRIBE categories_etablissements";
+            $stmtCe = $this->db->prepare($checkCe);
+            $stmtCe->execute();
+            error_log("categories_etablissements columns: " . json_encode($stmtCe->fetchAll(PDO::FETCH_COLUMN)));
+
             $sql = "SELECT COUNT(*) as count FROM formations_sanitaires fs 
                     JOIN categories_etablissements ce ON fs.categorie_id = ce.id 
                     WHERE fs.deleted_at IS NULL AND ";
             
+            // Build the query condition based on type
+            $condition = "";
             switch ($type) {
                 case 'CSU':
-                    $sql .= "type_formation = 'CSU' AND milieu = 'URBAIN'";
+                    $condition = "fs.type_formation = 'CENTRE_SANTE' AND fs.milieu = 'URBAIN'";
                     break;
                 case 'CSR':
-                    $sql .= "type_formation = 'CSR' AND milieu = 'RURAL'";
+                    $condition = "fs.type_formation = 'CENTRE_SANTE' AND fs.milieu = 'RURAL'";
                     break;
                 case 'HR':
-                    $sql .= "type_formation = 'HOPITAL' AND categorie_id = 2"; // Centre Hospitalier Régional
+                    $condition = "fs.type_formation = 'HOPITAL' AND ce.nom_categorie = 'Hôpital Régional'";
                     break;
                 case 'HP':
-                    $sql .= "ce.nom_categorie = 'Hôpital Provincial'";
+                    $condition = "fs.type_formation = 'HOPITAL' AND ce.nom_categorie = 'Hôpital Provincial'";
                     break;
                 case 'HL':
-                    $sql .= "type_formation = 'HOPITAL' AND categorie_id = 3"; // Centre de Santé Urbain (assuming this is the local hospital category)
+                    $condition = "fs.type_formation = 'HOPITAL' AND ce.nom_categorie LIKE '%Local%'";
                     break;
                 case 'CO':
-                    $sql .= "type_formation = 'CO'";
+                    $condition = "fs.type_formation = 'CO'";
                     break;
             }
+            
+            $sql .= $condition;
+            
+            // Log the final query for debugging
+            error_log("Query for type {$type}: " . $sql);
             
             $stmt = $this->db->prepare($sql);
             $stmt->execute();
             $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            
+            // Log the result
+            error_log("Result for type {$type}: " . json_encode($result));
             return (int)$result['count'];
         } catch (PDOException $e) {
             error_log("Error getting etablissements by type: " . $e->getMessage());
