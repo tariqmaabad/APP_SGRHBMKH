@@ -164,6 +164,10 @@
                                href="/APP_SGRHBMKH/mouvements">
                                 <i class="fas fa-exchange-alt"></i> Mouvements
                             </a>
+                            <a class="nav-link <?= strpos($_SERVER['REQUEST_URI'], '/notifications/retraite') !== false ? 'active' : '' ?>" 
+                               href="/APP_SGRHBMKH/notifications/retraite">
+                                <i class="fas fa-bell"></i> Notifications Retraite
+                            </a>
                         </div>
                     </li>
 

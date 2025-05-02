@@ -318,6 +318,21 @@ try {
             }
             break;
 
+        case 'notifications':
+            $controller = new NotificationController();
+            if (!isset($urlParts[1])) {
+                notFound();
+            } else {
+                switch ($urlParts[1]) {
+                    case 'retraite':
+                        $controller->retraite();
+                        break;
+                    default:
+                        notFound();
+                }
+            }
+            break;
+
         case 'auth':
             $controller = new AuthController();
             if (!isset($urlParts[1])) {
